@@ -107,13 +107,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Toaster position="top-right" />
       <Navbar />
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-20">
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold text-center text-gray-800">Advanced Certificate Generator</CardTitle>
+            <CardTitle className="text-3xl font-bold text-center ">Advanced Certificate Generator</CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -124,16 +124,16 @@ export default function Home() {
               </TabsList>
               <TabsContent value="upload" className="mt-6">
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-gray-700">Upload Certificate Template</h2>
+                  <h2 className="text-xl font-semibold ">Upload Certificate Template</h2>
                   <div className="flex items-center justify-center w-full">
-                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300">
+                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer transition-colors duration-300">
                       {certificateImage ? (
                         <Image src={certificateImage} alt="Certificate Template" width={300} height={200} className="object-contain rounded-lg shadow-md" />
                       ) : (
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <Upload className="w-10 h-10 mb-3 text-gray-400 animate-bounce" />
-                          <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                          <p className="text-xs text-gray-500">PNG, JPG or GIF (MAX. 800x400px)</p>
+                          <p className="mb-2 text-sm "><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                          <p className="text-xs ">PNG, JPG or GIF (MAX. 800x400px)</p>
                         </div>
                       )}
                       <input
@@ -150,7 +150,7 @@ export default function Home() {
               </TabsContent>
               <TabsContent value="recipients" className="mt-6">
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-gray-700">Add Recipients (Max. 5)</h2>
+                  <h2 className="text-xl font-semibold ">Add Recipients (Max. 5)</h2>
                   <div className="flex space-x-2">
                     <Input
                       type="text"
@@ -173,7 +173,7 @@ export default function Home() {
                         transition={{ duration: 0.2 }}
                         className="flex items-center justify-between bg-gray-100 p-2 rounded"
                       >
-                        <span>{name}</span>
+                        <span className='dark:text-black'>{name}</span>
                         <Button variant="destructive" size="sm" onClick={() => removeName(index)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -184,7 +184,7 @@ export default function Home() {
               </TabsContent>
               <TabsContent value="download" className="mt-6">
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-gray-700">Generate and Download Certificates</h2>
+                  <h2 className="text-xl font-semibold ">Generate and Download Certificates</h2>
                   <div className="flex space-x-4">
                     <Button onClick={generateCertificates} disabled={!certificateImage || names.length === 0 || isGenerating} className="flex-grow">
                       {isGenerating ? (
