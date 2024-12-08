@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">Web Certificate Generator</h1>
 
-## Getting Started
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-13-black" alt="Next.js Version" />
+  <img src="https://img.shields.io/badge/Tailwind-CSS-blue" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/TypeScript-blue" alt="TypeScript" />
+</p>
 
-First, run the development server:
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=nextjs,tailwind,typescript,vercel" alt="Tech Stack Icons" />
+</p>
+
+## Overview
+
+**Web Certificate Generator** is a powerful, user-friendly platform designed to simplify the process of creating professional, customizable certificates for various purposes such as academic achievements, training completion, workshops, and more.
+
+## Features
+
+- 🎨 Drag-and-drop certificate design
+- 📝 Customizable templates
+- 🖼️ Background and element customization
+- 📄 Multiple export formats (PDF, PNG, JPG)
+- 🔤 Font and typography options
+- 🌐 Responsive design
+- 🔒 Secure certificate generation
+- 📊 Bulk certificate creation
+
+## Tech Stack
+
+- **Next.js 13**
+- **Tailwind CSS**
+- **TypeScript**
+- **Vercel** (Deployment)
+- **Shadcn UI** (Component Library)
+
+## Prerequisites
+
+- Node.js 18.x or later
+- npm/yarn
+- Modern web browser
+
+## Setup & Installation
+
+1. **Clone the repository**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/mochrks/web-certif-generator.git
+cd web-certif-generator
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Install dependencies**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    ```bash
+   npm install
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Run the application**
 
-## Learn More
+    ```bash
+   npm run dev
+    ```
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Connect with me:
+[![GitHub](https://img.shields.io/badge/GitHub-333?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mochrks)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtube.com/@Gdvisuel)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/mochrks)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/mochrks)
+[![Behance](https://img.shields.io/badge/Behance-1769FF?style=for-the-badge&logo=behance&logoColor=white)](https://behance.net/mochrks)
+[![Dribbble](https://img.shields.io/badge/Dribbble-EA4C89?style=for-the-badge&logo=dribbble&logoColor=white)](https://dribbble.com/mochrks)
