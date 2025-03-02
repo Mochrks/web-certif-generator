@@ -1,5 +1,3 @@
-
-
 export function Footer() {
     return (
         <footer className="shadow-md mt-12 border-t">
