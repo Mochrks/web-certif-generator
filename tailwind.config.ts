@@ -18,7 +18,12 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		colors: {
+  			fontFamily: {
+				sans: ['var(--font-inter)'],
+				outfit: ['var(--font-outfit)'],
+				playfair: ['var(--font-playfair)'],
+			},
+			colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

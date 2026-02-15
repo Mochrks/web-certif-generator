@@ -1,8 +1,8 @@
 import sharp from "sharp"
 
 interface TextPosition {
-  x: number
-  y: number
+  x: number // percentage 0-1
+  y: number // percentage 0-1
   fontSize: number
   fontColor: string
   fontWeight: string
@@ -10,23 +10,28 @@ interface TextPosition {
   textAlign: "left" | "center" | "right"
 }
 
-const DEFAULT_TEXT_POSITION: TextPosition = {
-  x: 0.5, // Center horizontally
-  y: 0.6, // Slightly below center vertically
-  fontSize: 60,
-  fontColor: "#000000",
-  fontWeight: "bold",
-  fontFamily: "Arial",
-  textAlign: "center",
-}
-
-export async function generateCertificate(templateUrl: string, name: string, isPreview = false): Promise<string> {
+export async function generateCertificate(
+  templateUrl: string, 
+  name: string, 
+  options?: Partial<TextPosition> & { isPreview?: boolean }
+): Promise<string> {
   try {
     // Extract base64 data from data URL
     const base64Data = templateUrl.split(",")[1]
     if (!base64Data) {
       throw new Error("Invalid template URL format")
     }
+
+    const {
+      x = 0.5,
+      y = 0.6,
+      fontSize = 60,
+      fontColor = "#000000",
+      fontWeight = "bold",
+      fontFamily = "Arial",
+      textAlign = "center",
+      isPreview = false
+    } = options || {}
 
     // Convert base64 to buffer
     const imageBuffer = Buffer.from(base64Data, "base64")
@@ -42,27 +47,28 @@ export async function generateCertificate(templateUrl: string, name: string, isP
     // Calculate text position and size
     const width = metadata.width
     const height = metadata.height
-    const textX = Math.round(width * DEFAULT_TEXT_POSITION.x)
-    const textY = Math.round(height * DEFAULT_TEXT_POSITION.y)
+    const textX = Math.round(width * x)
+    const textY = Math.round(height * y)
 
-    // Calculate dynamic font size based on image width and name length
-    const dynamicFontSize = Math.min(DEFAULT_TEXT_POSITION.fontSize, Math.floor(width / (name.length * 0.7)))
+    // Calculate dynamic font size factor if needed, but we'll use the provided fontSize as base
+    // We could add auto-scaling logic here too if name is too long
+    const textAnchor = textAlign === "center" ? "middle" : textAlign === "right" ? "end" : "start"
 
     // Create SVG text overlay
     const svgText = `
       <svg width="${width}" height="${height}">
         <style>
           .certificate-text { 
-            font-size: ${dynamicFontSize}px; 
-            font-family: ${DEFAULT_TEXT_POSITION.fontFamily}; 
-            font-weight: ${DEFAULT_TEXT_POSITION.fontWeight};
-            fill: ${DEFAULT_TEXT_POSITION.fontColor};
+            font-size: ${fontSize}px; 
+            font-family: ${fontFamily}; 
+            font-weight: ${fontWeight};
+            fill: ${fontColor};
           }
         </style>
         <text 
           x="${textX}" 
           y="${textY}" 
-          text-anchor="middle" 
+          text-anchor="${textAnchor}" 
           class="certificate-text"
         >${name}</text>
       </svg>
@@ -73,7 +79,7 @@ export async function generateCertificate(templateUrl: string, name: string, isP
       .composite([
         {
           input: Buffer.from(svgText),
-          gravity: "center",
+          gravity: "northwest", // Match SVG coordinate system
         },
       ])
       .png({

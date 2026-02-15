@@ -3,7 +3,7 @@ import { generateCertificate } from "@/lib/certificate-generator"
 
 export async function POST(req: NextRequest) {
   try {
-    const { templateUrl, name, isPreview } = await req.json()
+    const { templateUrl, name, ...options } = await req.json()
 
     // Validate inputs
     if (!templateUrl) {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate the certificate
-    const certificateUrl = await generateCertificate(templateUrl, name, isPreview)
+    const certificateUrl = await generateCertificate(templateUrl, name, options)
 
     return NextResponse.json({ certificateUrl })
   } catch (error) {
