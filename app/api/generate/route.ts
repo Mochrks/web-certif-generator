@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { generateCertificate } from "@/lib/certificate-generator"
+import { generateCertificate } from "../../../lib/certificate-generator"
 
 export async function POST(req: NextRequest) {
   try {

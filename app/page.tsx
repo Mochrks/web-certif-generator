@@ -1,7 +1,7 @@
-import CertificateGenerator from "@/components/demo/CertificateGenerator"
-import Footer from "@/components/demo/Footer"
-import { Navbar } from "@/components/demo/Navbar"
-import { Toaster } from "@/components/ui/toaster"
+import CertificateGenerator from "../components/demo/CertificateGenerator"
+import Footer from "../components/demo/Footer"
+import { Navbar } from "../components/demo/Navbar"
+import { Toaster } from "../components/ui/toaster"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {

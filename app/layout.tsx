@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ThemeProvider } from "@/components/demo/theme-provider"
+import { ThemeProvider } from "../components/demo/theme-provider"
 import { Inter, Outfit, Playfair_Display } from 'next/font/google'
 import './globals.css'
 
