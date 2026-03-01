@@ -54,6 +54,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 // --- Types ---
 
@@ -156,9 +167,13 @@ export default function CertificateGenerator() {
         if (!ctx) return
 
         const img = new (window.Image as any)()
-        img.src = certificateImage
-        await new Promise((resolve) => {
-            img.onload = resolve
+        await new Promise((resolve, reject) => {
+            img.onload = () => resolve(true)
+            img.onerror = reject
+            img.src = certificateImage
+            if (img.complete) {
+                resolve(true)
+            }
         })
 
         canvas.width = img.width
@@ -789,9 +804,23 @@ export default function CertificateGenerator() {
                                         ))}
                                     </div>
                                     <div className="text-center py-10">
-                                        <Button variant="ghost" onClick={() => {
-                                            if (confirm("New project? Existing data will be cleared.")) window.location.reload()
-                                        }} className="text-muted-foreground uppercase tracking-widest text-[10px] font-bold">Start New Session</Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" className="text-muted-foreground uppercase tracking-widest text-[10px] font-bold">Start New Session</Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Start New Session?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This will clear all current existing data, including all designs, names, and generated certificates. Are you sure you want to proceed?
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => window.location.reload()}>Start New Session</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </div>
                             )}
@@ -808,16 +837,32 @@ export default function CertificateGenerator() {
                     </Button>
 
                     <div className="flex gap-4">
-                        <Button variant="ghost" size="sm" onClick={() => {
-                            if (confirm("Reset all layers and recipients?")) {
-                                setLayers(INITIAL_LAYERS);
-                                setNames([]);
-                                setGeneratedCertificates([]);
-                                setCurrentStep(0);
-                            }
-                        }} className="text-destructive font-black text-xs tracking-widest">
-                            BURN ALL DATA
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="ghost" size="sm" className="text-destructive font-black text-xs tracking-widest">
+                                    BURN ALL DATA
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Reset Workspace?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Are you absolutely sure? This will delete all your templates, designs, layers, and recipient names. This action cannot be undone.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => {
+                                        setLayers(INITIAL_LAYERS);
+                                        setNames([]);
+                                        setGeneratedCertificates([]);
+                                        setCurrentStep(0);
+                                    }} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                        Yes, Burn It
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </div>
                 </div>
             )}

@@ -17,14 +17,12 @@ export default function Footer() {
 
                     <div className="flex flex-col items-center md:items-end gap-2">
                         <div className="flex items-center gap-4 text-sm font-bold">
-                            <span className="text-muted-foreground opacity-50">v2.1.0</span>
+                            <span className="text-muted-foreground opacity-50">v2.1.1</span>
                             <Separator orientation="vertical" className="h-4" />
-                            <Link href="https://github.com/Mochrks" target="_blank" className="hover:text-primary transition-colors">
-                                DEVELOPER PORTFOLIO
-                            </Link>
+
                         </div>
                         <p className="text-[10px] font-black tracking-[0.2em] text-muted-foreground uppercase">
-                            © {new Date().getFullYear()} Mochrks Engineering. All Rights Reserved.
+                            © {new Date().getFullYear()} <Link href="https://github.com/mochrks" target="_blank" className="hover:text-primary transition-colors">Mochrks</Link>. All Rights Reserved.
                         </p>
                     </div>
                 </div>
