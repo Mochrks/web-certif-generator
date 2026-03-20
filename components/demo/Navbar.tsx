@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { Moon, Sun, Github, ShieldCheck } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "../ui/button"
+import { Separator } from "../ui/separator"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 

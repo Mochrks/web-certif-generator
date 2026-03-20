@@ -2,11 +2,11 @@
 
 import type React from "react"
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { useToast } from "@/components/ui/use-toast"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card"
+import { Progress } from "../ui/progress"
+import { useToast } from "../ui/use-toast"
 import {
     Upload,
     Download,
@@ -40,20 +40,20 @@ import { motion, AnimatePresence } from "framer-motion"
 import Papa from "papaparse"
 import JSZip from "jszip"
 import confetti from "canvas-confetti"
-import { Slider } from "@/components/ui/slider"
-import { Label } from "@/components/ui/label"
+import { Slider } from "../ui/slider"
+import { Label } from "../ui/label"
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue
-} from "@/components/ui/select"
-import { GOOGLE_FONTS } from "@/utils/fonts"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
+} from "../ui/select"
+import { GOOGLE_FONTS } from "../../utils/fonts"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
+import { Separator } from "../ui/separator"
+import { Switch } from "../ui/switch"
+import { Badge } from "../ui/badge"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -64,7 +64,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "../ui/alert-dialog"
 
 // --- Types ---
 
