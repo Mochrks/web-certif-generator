@@ -7,7 +7,7 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="space-y-2 text-center md:text-left">
-                        <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                        <h3 className="text-2xl font-playfair text-foreground">
                             CertifyDraft
                         </h3>
                         <p className="text-sm text-muted-foreground font-medium">
@@ -17,7 +17,7 @@ export default function Footer() {
 
                     <div className="flex flex-col items-center md:items-end gap-2">
                         <div className="flex items-center gap-4 text-sm font-bold">
-                            <span className="text-muted-foreground opacity-50">v2.1.1</span>
+                            <span className="text-muted-foreground opacity-50">v1.2</span>
                             <Separator orientation="vertical" className="h-4" />
 
                         </div>

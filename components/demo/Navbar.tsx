@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Moon, Sun, Github, ShieldCheck } from 'lucide-react'
+import { Moon, Sun, Github } from 'lucide-react'
 import { Button } from "../ui/button"
 import { Separator } from "../ui/separator"
 import { useTheme } from "next-themes"
@@ -23,23 +23,12 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex items-center gap-2">
-                        <div className="bg-primary/10 p-2 rounded-lg">
-                            <ShieldCheck className="w-6 h-6 text-primary" />
-                        </div>
-                        <Link href="/" className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+                        <Link href="/" className="text-2xl font-playfair tracking-tight text-foreground font-semibold">
                             CertifyDraft
                         </Link>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="hidden lg:flex flex-col items-end mr-2">
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">System Status</span>
-                            <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1">
-                                <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" /> Ready
-                            </span>
-                        </div>
-
-                        <Separator orientation="vertical" className="h-8 hidden lg:block" />
+                    <div className="flex items-center gap-2">
 
                         <Button
                             variant="ghost"

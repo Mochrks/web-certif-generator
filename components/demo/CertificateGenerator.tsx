@@ -323,25 +323,24 @@ export default function CertificateGenerator() {
     // --- Step Components ---
 
     const StepNavbar = (
-        <div className="flex justify-between items-center mb-12 relative overflow-x-auto pb-4">
-            <div className="absolute top-6 left-0 w-full h-0.5 bg-muted -z-10" />
+        <div className="flex flex-wrap justify-center items-center gap-2 mb-12">
             {STEPS.map((step, idx) => {
                 const Icon = step.icon
                 const isActive = idx <= currentStep
+                const isCurrent = idx === currentStep
                 return (
-                    <div key={step.id} className="flex flex-col items-center gap-3 px-4 min-w-[100px]">
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                    <div key={step.id} className="flex items-center gap-2">
+                        <motion.button
+                            whileHover={idx < currentStep ? { scale: 1.05 } : {}}
+                            whileTap={idx < currentStep ? { scale: 0.95 } : {}}
                             onClick={() => idx < currentStep && setCurrentStep(idx)}
-                            className={`w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-500 cursor-pointer ${isActive ? "bg-primary border-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)]" : "bg-card border-muted text-muted-foreground"
-                                }`}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${isCurrent ? 'bg-primary text-primary-foreground shadow-sm' : isActive ? 'bg-primary/5 text-primary hover:bg-primary/10 cursor-pointer' : 'text-muted-foreground opacity-40 cursor-not-allowed'}`}
+                            disabled={!isActive && !isCurrent}
                         >
-                            <Icon size={20} />
-                        </motion.div>
-                        <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${isActive ? "text-primary" : "text-muted-foreground"}`}>
-                            {step.title}
-                        </span>
+                            <Icon size={16} />
+                            <span className="hidden sm:inline">{step.title}</span>
+                        </motion.button>
+                        {idx < STEPS.length - 1 && <ChevronRight size={16} className="text-muted-foreground opacity-20 mx-1" />}
                     </div>
                 )
             })}
@@ -363,24 +362,44 @@ export default function CertificateGenerator() {
                     {/* STEP 1: TEMPLATE UPLOAD */}
                     {currentStep === 0 && (
                         <div className="max-w-2xl mx-auto">
-                            <Card className="border-2 border-dashed border-primary/20 bg-primary/5 hover:border-primary/50 transition-all duration-500 group">
+                            <Card className="border border-dashed border-muted-foreground/30 bg-muted/10 hover:bg-muted/20 transition-all duration-300 group">
                                 <CardContent
                                     className="flex flex-col items-center justify-center py-24 cursor-pointer"
                                     onClick={() => fileInputRef.current?.click()}
+                                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const file = e.dataTransfer.files?.[0];
+                                        if (file && file.type.startsWith('image/')) {
+                                            const reader = new FileReader()
+                                            reader.onload = (ev) => {
+                                                const url = ev.target?.result as string
+                                                const tempImg = new (window.Image as any)()
+                                                tempImg.src = url
+                                                tempImg.onload = () => {
+                                                    setImgDimensions({ width: tempImg.width, height: tempImg.height })
+                                                    setCertificateImage(url)
+                                                    setCurrentStep(1)
+                                                }
+                                            }
+                                            reader.readAsDataURL(file)
+                                        }
+                                    }}
                                 >
                                     <motion.div
-                                        animate={{ y: [0, -10, 0] }}
+                                        animate={{ y: [0, -5, 0] }}
                                         transition={{ repeat: Infinity, duration: 4 }}
-                                        className="w-24 h-24 rounded-3xl bg-primary/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform"
+                                        className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center mb-8 group-hover:scale-105 transition-transform"
                                     >
-                                        <Upload className="text-primary" size={40} />
+                                        <Upload className="text-primary" size={32} />
                                     </motion.div>
-                                    <h3 className="text-3xl font-bold mb-3 tracking-tight">Upload Your Template</h3>
+                                    <h3 className="text-3xl font-playfair mb-3 tracking-tight">Upload Your Template</h3>
                                     <p className="text-muted-foreground text-center max-w-sm mb-10 leading-relaxed">
                                         Choose a high-authority certificate design (PNG or JPG).
-                                        Maximum recommended size: 4K (10MB).
+                                        Drag & drop or click to browse.
                                     </p>
-                                    <Button size="lg" className="rounded-full px-10 h-14 text-md shadow-xl hover:shadow-primary/20">
+                                    <Button size="lg" className="rounded-md px-8 h-12 text-md font-medium transition-all">
                                         <Sparkles size={18} className="mr-2" /> Select Image File
                                     </Button>
                                     <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
@@ -394,21 +413,21 @@ export default function CertificateGenerator() {
                         <div className="grid grid-cols-1 xl:grid-cols-[1fr,400px] gap-8 items-start">
                             {/* Main Preview Area */}
                             <div className="space-y-4">
-                                <Card className="overflow-hidden border-0 shadow-2xl bg-black/5 dark:bg-white/5 backdrop-blur-sm">
-                                    <div className="bg-muted/50 p-4 flex justify-between items-center border-b">
+                                <Card className="overflow-hidden border bg-card shadow-sm">
+                                    <div className="bg-muted/30 p-4 flex justify-between items-center border-b">
                                         <div className="flex items-center gap-3">
-                                            <div className="bg-primary/20 p-2 rounded-lg"><MousePointer2 size={18} className="text-primary" /></div>
-                                            <span className="font-semibold text-sm">Interactive Workspace</span>
+                                            <div className="bg-primary/10 p-2 rounded-md"><MousePointer2 size={16} className="text-primary" /></div>
+                                            <span className="font-medium text-sm">Interactive Workspace</span>
                                         </div>
                                         <div className="flex gap-2">
-                                            <Button variant="outline" size="sm" onClick={addLayer} className="rounded-full h-9 px-4">
+                                            <Button variant="outline" size="sm" onClick={addLayer} className="h-9 px-4 rounded-md">
                                                 <Plus size={16} className="mr-2" /> Add Text Layer
                                             </Button>
                                         </div>
                                     </div>
-                                    <CardContent className="p-0 relative flex items-center justify-center min-h-[500px] bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]">
-                                        <div ref={workspaceRef} className="relative shadow-2xl m-8 max-w-[90%]">
-                                            <canvas ref={previewCanvasRef} className="max-w-full h-auto rounded-sm border shadow-lg bg-white" />
+                                    <CardContent className="p-0 relative flex items-center justify-center min-h-[500px] bg-muted/10">
+                                        <div ref={workspaceRef} className="relative m-8 max-w-[90%] border bg-white shadow-sm">
+                                            <canvas ref={previewCanvasRef} className="max-w-full h-auto block" />
 
                                             {/* Draggable Handles Overlay */}
                                             {layers.map(layer => (
@@ -467,16 +486,16 @@ export default function CertificateGenerator() {
                                         <Separator orientation="vertical" className="h-4 mx-2" />
                                         Resolution: {imgDimensions.width}x{imgDimensions.height}
                                     </div>
-                                    <Button onClick={() => setCurrentStep(2)} className="h-11 rounded-full px-8 shadow-lg shadow-primary/20">
-                                        Continue to Recipients <ChevronRight className="ml-2" />
+                                    <Button onClick={() => setCurrentStep(2)} className="h-10 rounded-md px-6 font-medium">
+                                        Continue to Recipients <ChevronRight className="ml-2" size={16} />
                                     </Button>
                                 </div>
                             </div>
 
                             {/* Sidebar Panel */}
                             <div className="space-y-6 lg:sticky lg:top-24">
-                                <Tabs defaultValue="style" className="bg-card rounded-2xl border shadow-xl overflow-hidden">
-                                    <TabsList className="w-full h-14 bg-muted/30 border-b rounded-none px-0">
+                                <Tabs defaultValue="style" className="bg-card rounded-xl border shadow-sm overflow-hidden">
+                                    <TabsList className="w-full h-12 bg-muted/20 border-b rounded-none px-0">
                                         <TabsTrigger value="style" className="flex-1 h-full rounded-none data-[state=active]:bg-background"><Settings2 size={16} className="mr-2" /> Style</TabsTrigger>
                                         <TabsTrigger value="filters" className="flex-1 h-full rounded-none data-[state=active]:bg-background"><Move size={16} className="mr-2" /> Global</TabsTrigger>
                                         <TabsTrigger value="layers" className="flex-1 h-full rounded-none data-[state=active]:bg-background"><LayersIcon size={16} className="mr-2" /> Layers</TabsTrigger>
@@ -617,9 +636,9 @@ export default function CertificateGenerator() {
                     {/* STEP 3: RECIPIENTS DATA */}
                     {currentStep === 2 && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                            <Card className="border-0 shadow-2xl bg-card">
+                            <Card className="border shadow-sm bg-card">
                                 <CardHeader>
-                                    <CardTitle className="text-2xl font-bold flex items-center gap-3">
+                                    <CardTitle className="text-2xl font-playfair flex items-center gap-3">
                                         <FileSpreadsheet className="text-emerald-500" />
                                         Import Recipients
                                     </CardTitle>
@@ -634,9 +653,9 @@ export default function CertificateGenerator() {
                                                 value={currentName}
                                                 onChange={(e) => setCurrentName(e.target.value)}
                                                 onKeyDown={(e) => e.key === 'Enter' && (currentName.trim() && (setNames([...names, currentName.trim()]), setCurrentName("")))}
-                                                className="rounded-xl h-12 shadow-sm"
+                                                className="rounded-md h-10"
                                             />
-                                            <Button size="lg" className="rounded-xl px-6" onClick={() => {
+                                            <Button size="default" className="rounded-md px-4" onClick={() => {
                                                 if (currentName.trim()) {
                                                     setNames([...names, currentName.trim()])
                                                     setCurrentName("")
@@ -653,21 +672,39 @@ export default function CertificateGenerator() {
                                     <div
                                         className="border-2 border-dashed rounded-2xl p-12 flex flex-col items-center justify-center gap-6 hover:bg-muted/50 transition-all cursor-pointer bg-muted/20"
                                         onClick={() => csvInputRef.current?.click()}
+                                        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            const file = e.dataTransfer.files?.[0];
+                                            if (file && (file.type === "text/csv" || file.name.endsWith(".csv"))) {
+                                                Papa.parse(file, {
+                                                    complete: (results) => {
+                                                        const parsedNames = results.data
+                                                            .flat()
+                                                            .map((n: any) => String(n).trim())
+                                                            .filter((n) => n.length > 0)
+                                                        setNames((prev) => [...prev, ...parsedNames].filter((v, i, a) => a.indexOf(v) === i))
+                                                        toast({ title: "Import Successful", description: `Added ${parsedNames.length} names.` })
+                                                    }
+                                                })
+                                            }
+                                        }}
                                     >
                                         <div className="p-4 bg-emerald-500/10 rounded-full"><FileSpreadsheet className="text-emerald-500" size={40} /></div>
                                         <div className="text-center space-y-1">
                                             <p className="font-bold">Drop your CSV file here</p>
                                             <p className="text-xs text-muted-foreground">Make sure names are in the first column</p>
                                         </div>
-                                        <Button variant="secondary" className="rounded-full shadow-sm">Choose File</Button>
+                                        <Button variant="secondary" className="rounded-md shadow-sm">Choose File</Button>
                                         <input ref={csvInputRef} type="file" className="hidden" accept=".csv" onChange={handleCsvUpload} />
                                     </div>
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-0 shadow-2xl bg-card overflow-hidden">
+                            <Card className="border shadow-sm bg-card overflow-hidden">
                                 <div className="p-6 bg-muted/30 border-b flex justify-between items-center">
-                                    <CardTitle className="text-xl">Prepared List ({names.length})</CardTitle>
+                                    <CardTitle className="text-xl font-playfair">Prepared List ({names.length})</CardTitle>
                                     {names.length > 0 && (
                                         <Button variant="ghost" size="sm" onClick={() => setNames([])} className="text-destructive font-bold text-xs"><Trash size={14} className="mr-1" /> Reset List</Button>
                                     )}
@@ -702,8 +739,8 @@ export default function CertificateGenerator() {
                                 </CardContent>
                                 {names.length > 0 && (
                                     <div className="p-4 bg-muted/10 border-t">
-                                        <Button className="w-full h-12 rounded-xl text-md shadow-lg" onClick={() => setCurrentStep(3)}>
-                                            Finish & Generate <ChevronRight className="ml-2" />
+                                        <Button className="w-full h-10 rounded-md font-medium" onClick={() => setCurrentStep(3)}>
+                                            Finish & Generate <ChevronRight className="ml-2" size={16} />
                                         </Button>
                                     </div>
                                 )}
@@ -715,13 +752,12 @@ export default function CertificateGenerator() {
                     {currentStep === 3 && (
                         <div className="max-w-5xl mx-auto space-y-8">
                             {!generatedCertificates.length ? (
-                                <Card className="p-12 text-center space-y-8 bg-card border-0 shadow-2xl overflow-hidden relative">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+                                <Card className="p-12 text-center space-y-8 bg-card border shadow-sm overflow-hidden relative">
                                     <div className="max-w-md mx-auto space-y-4">
-                                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <CheckCircle2 className="text-primary" size={32} />
+                                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                            <CheckCircle2 className="text-primary" size={28} />
                                         </div>
-                                        <h2 className="text-4xl font-black">All Set!</h2>
+                                        <h2 className="text-4xl font-playfair font-medium">All Set!</h2>
                                         <p className="text-muted-foreground text-lg leading-relaxed">
                                             We are ready to generate **{names.length}** high-resolution certificates with your interactive design.
                                         </p>
@@ -742,7 +778,7 @@ export default function CertificateGenerator() {
                                             </div>
                                         </div>
                                     ) : (
-                                        <Button size="lg" className="h-16 px-16 rounded-full text-xl font-bold shadow-2xl hover:scale-105 transition-all bg-primary" onClick={generateAll}>
+                                        <Button size="lg" className="h-12 px-10 rounded-md text-md font-medium transition-all bg-primary" onClick={generateAll}>
                                             Generate Certificates
                                         </Button>
                                     )}
@@ -759,14 +795,14 @@ export default function CertificateGenerator() {
                                                 <Download size={32} />
                                             </div>
                                             <div>
-                                                <h3 className="text-2xl font-black text-emerald-600 flex items-center gap-2">
+                                                <h3 className="text-2xl font-playfair text-emerald-600 flex items-center gap-2">
                                                     Success! {generatedCertificates.length} Done.
                                                 </h3>
                                                 <p className="text-muted-foreground font-medium">Batch production completed perfectly.</p>
                                             </div>
                                         </div>
-                                        <Button size="lg" onClick={downloadAll} disabled={isZipping} className="rounded-full px-12 h-14 text-lg bg-emerald-500 hover:bg-emerald-600 shadow-xl shadow-emerald-500/20">
-                                            {isZipping ? <RefreshCw className="animate-spin mr-2" /> : <Download className="mr-2" />}
+                                        <Button size="lg" onClick={downloadAll} disabled={isZipping} className="rounded-md px-8 h-12 font-medium bg-emerald-600 hover:bg-emerald-700">
+                                            {isZipping ? <RefreshCw className="animate-spin mr-2" /> : <Download className="mr-2" size={18} />}
                                             Download All (ZIP)
                                         </Button>
                                     </motion.div>
@@ -781,9 +817,9 @@ export default function CertificateGenerator() {
                                                 whileHover={{ y: -8 }}
                                                 className="group relative"
                                             >
-                                                <Card className="overflow-hidden border-0 shadow-lg group-hover:shadow-2xl transition-all">
+                                                <Card className="overflow-hidden border shadow-sm group-hover:shadow-md transition-all">
                                                     <div className="aspect-[1.41] relative bg-muted flex items-center justify-center overflow-hidden">
-                                                        <Image src={cert.url} alt={cert.name} fill className="object-cover transition-transform group-hover:scale-110" unoptimized />
+                                                        <Image src={cert.url} alt={cert.name} fill className="object-cover transition-transform group-hover:scale-105" unoptimized />
                                                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                             <Button variant="outline" size="sm" className="bg-white text-black border-none rounded-full" onClick={() => {
                                                                 const a = document.createElement("a");
@@ -806,18 +842,23 @@ export default function CertificateGenerator() {
                                     <div className="text-center py-10">
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" className="text-muted-foreground uppercase tracking-widest text-[10px] font-bold">Start New Session</Button>
+                                                <Button variant="ghost" className="text-muted-foreground uppercase tracking-wider text-xs font-medium">Start New Session</Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle>Start New Session?</AlertDialogTitle>
+                                                    <AlertDialogTitle className="font-playfair">Start New Session?</AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                        This will clear all current existing data, including all designs, names, and generated certificates. Are you sure you want to proceed?
+                                                        This will clear all generated certificates, imported names, and design layers. You will be taken back to the template upload step.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => window.location.reload()}>Start New Session</AlertDialogAction>
+                                                    <AlertDialogAction onClick={() => {
+                                                        setLayers(INITIAL_LAYERS);
+                                                        setNames([]);
+                                                        setGeneratedCertificates([]);
+                                                        setCurrentStep(0);
+                                                    }}>Start New Session</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -831,23 +872,23 @@ export default function CertificateGenerator() {
 
             {/* Persistence Controls */}
             {currentStep > 0 && !isGenerating && (
-                <div className="flex justify-between items-center pt-12 border-t">
-                    <Button variant="ghost" size="lg" onClick={() => setCurrentStep(prev => prev - 1)} className="gap-2 rounded-full font-bold">
-                        <ChevronLeft size={20} /> Back to {STEPS[currentStep - 1].title}
+                <div className="flex justify-between items-center pt-12 border-t mt-12">
+                    <Button variant="ghost" size="lg" onClick={() => setCurrentStep(prev => prev - 1)} className="gap-2 rounded-full font-medium">
+                        <ChevronLeft size={18} /> Back to {STEPS[currentStep - 1].title}
                     </Button>
 
                     <div className="flex gap-4">
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="sm" className="text-destructive font-black text-xs tracking-widest">
-                                    BURN ALL DATA
+                                <Button variant="ghost" size="sm" className="text-destructive font-medium text-xs tracking-wider">
+                                    Reset Workspace
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle>Reset Workspace?</AlertDialogTitle>
+                                    <AlertDialogTitle className="font-playfair">Reset Workspace?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        Are you absolutely sure? This will delete all your templates, designs, layers, and recipient names. This action cannot be undone.
+                                        Are you absolutely sure? This will clear all templates, text layers, and recipient data. This action cannot be undone.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
